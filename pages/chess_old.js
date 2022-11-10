@@ -50,8 +50,7 @@ function makeGame(div) {
   });
   // either null or the actively selected square
 let selected = null;
-let ai_turn=false;
-let moves=null;
+
 // make an onClick function
 const onClick = event => {
   const square = event.target.id;
@@ -59,12 +58,6 @@ const onClick = event => {
 
   // check to see if we are moving a piece
   if (selected && gameState.moves[selected].includes(square)) {
-    gameState.moves[selected].forEach(ml=>{    
-      console.log(ml);
-      const el = document.getElementById(ml);
-      el.classList.remove(styles.isMoveOption);
-    }
-    )
     // move the piece
     game.move(selected, square);
     gameState = game.exportJson();
@@ -74,50 +67,15 @@ const onClick = event => {
     // and putting the piece on the new square
     document.getElementById(square).innerText = GLYPHS[gameState.pieces[square]];
 
-    
     // reset the selection state to unselected
     selected = null;
-    ai_turn=true;
-  } 
-  else if (selected) {
+  } else if (selected) {
     // they tried to move a piece to a random spot on the board
-    gameState.moves[selected].forEach(ml=>{    
-      console.log(ml);
-      const el = document.getElementById(ml);
-      el.classList.remove(styles.isMoveOption);
-    })
     return;
-  } 
-  else if (gameState.moves[square]) {
+  } else if (gameState.moves[square]) {
     // clicked on a piece that can move,
     // set the selection to that piece
     selected = square;
-    moves=gameState.moves[square];
-    gameState.moves[square].forEach(ml=>{    
-      console.log(ml);
-      const el = document.getElementById(ml);
-      el.classList.add(styles.isMoveOption);
-    }
-    )
-  }
-
-  if(ai_turn)
-  {
-    const [movedFrom, movedTo] = Object.entries(game.aiMove())[0];
-    console.log('AI from  ' + movedFrom);
-    console.log('AI to clicked ' + movedTo);
-    
-    console.log('beyekteb ');
-    
-    // update the text by clearing out the old square
-    document.getElementById(movedFrom).innerText = "";
-    // and putting the piece on the new square
-    document.getElementById(movedTo).innerText = GLYPHS[gameState.pieces[movedTo]];
-    console.log('bey7arak ');
-   // move the piece
-    gameState = game.exportJson();
-    console.log('bey7arak ');
-    ai_turn=false;
   }
 }
 // put that onClick function on every square
